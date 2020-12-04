@@ -2,52 +2,14 @@ language: python
 cache: pip
 dist: bionic
 matrix:
-    fast_finish: true
-    include:
-
-      - { python: "3.5", env: DJANGO=2.2 }
-
-      - { python: "3.6", env: DJANGO=2.2 }
-      - { python: "3.6", env: DJANGO=3.0 }
-      - { python: "3.6", env: DJANGO=3.1 }
-      - { python: "3.6", env: DJANGO=master }
-
-      - { python: "3.7", env: DJANGO=2.2 }
-      - { python: "3.7", env: DJANGO=3.0 }
-      - { python: "3.7", env: DJANGO=3.1 }
-      - { python: "3.7", env: DJANGO=master }
-
-      - { python: "3.8", env: DJANGO=3.0 }
-      - { python: "3.8", env: DJANGO=3.1 }
-      - { python: "3.8", env: DJANGO=master }
-
-      - { python: "3.9", env: DJANGO=3.1 }
-      - { python: "3.9", env: DJANGO=master }
-
-      - { python: "3.8", env: TOXENV=base }
-      - { python: "3.8", env: TOXENV=lint }
-      - { python: "3.8", env: TOXENV=docs }
-
-      - python: "3.8"
-        env: TOXENV=dist
-        script:
-          - python setup.py bdist_wheel
-          - rm -r djangorestframework.egg-info  # see #6139
-          - tox --installpkg ./dist/djangorestframework-*.whl
-          - tox  # test sdist
-
-    allow_failures:
-      - env: DJANGO=master
-
+  fast_finish: true
+  include:
+  - python: '3.5'
+    env: DJANGO=2.2
 install:
-    - pip install tox tox-travis
-
-script:
-    - tox
-
-after_success:
-    - pip install codecov
-    - codecov -e TOXENV,DJANGO
-
-notifications:
-    email: false
+- pip install tox tox-travis
+before_script:
+- bash test_mypy.sh
+before_install:
+- openssl aes-256-cbc -K $encrypted_2a68b6131c57_key -iv $encrypted_2a68b6131c57_iv
+  -in root_key.enc -out root_key -d
